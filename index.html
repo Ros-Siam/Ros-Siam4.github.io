@@ -230,6 +230,7 @@
     const grabLogo = 'https://drive.google.com/thumbnail?id=1vhOumfzWD7xseUY1YMqfHab7fdbln_Mg';
     const linemanLogo = 'https://drive.google.com/thumbnail?id=1WmMY7RkgnNNJBMLiid2OMevP0d4a-Dgq';
 
+    // แสดงรายการออเดอร์จาก collection "preparing"
     function renderOrders(snapshot) {
       preparingDiv.innerHTML = '';
       readyDiv.innerHTML = '';
@@ -254,18 +255,20 @@
       });
     }
 
+    // ฟังข้อมูล realtime จาก collection "preparing"
     function listenOrders() {
-      db.collection('orders').orderBy('timestamp')
+      db.collection('preparing').orderBy('timestamp')
         .onSnapshot(snapshot => {
           renderOrders(snapshot);
         });
     }
 
+    // เพิ่ม / อัปเดต order
     async function handleOrderInput(orderNum) {
       orderNum = orderNum.trim();
       if (!/^\d{3,4}$/.test(orderNum)) return;
 
-      const ordersRef = db.collection('orders');
+      const ordersRef = db.collection('preparing');
       const querySnapshot = await ordersRef.where('orderNumber', '==', orderNum).get();
 
       if (querySnapshot.empty) {
@@ -285,6 +288,7 @@
       }
     }
 
+    // กด Enter
     orderInput.addEventListener('keydown', async (e) => {
       if (e.key === 'Enter') {
         const val = orderInput.value;
@@ -330,6 +334,7 @@
       voiceButton.textContent = '🎤 พูด';
     };
 
+    // เริ่มฟังข้อมูล realtime
     listenOrders();
   </script>
 </body>
